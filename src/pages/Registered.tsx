@@ -81,8 +81,8 @@ const mockIndividuals = [
 const Registered = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
-  const [skillFilter, setSkillFilter] = useState('');
-  const [branchFilter, setBranchFilter] = useState('');
+  const [skillFilter, setSkillFilter] = useState('all');
+  const [branchFilter, setBranchFilter] = useState('all');
   const [teams, setTeams] = useState(mockTeams);
   const [individuals, setIndividuals] = useState(mockIndividuals);
 
@@ -143,10 +143,10 @@ const Registered = () => {
 
   const filteredIndividuals = individuals.filter(individual =>
     individual.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (skillFilter === '' || individual.skills.some(skill => 
+    (skillFilter === 'all' || individual.skills.some(skill => 
       skill.toLowerCase().includes(skillFilter.toLowerCase())
     )) &&
-    (branchFilter === '' || individual.branch === branchFilter)
+    (branchFilter === 'all' || individual.branch === branchFilter)
   );
 
   return (
@@ -183,7 +183,7 @@ const Registered = () => {
                   <SelectValue placeholder="Filter by skill" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Skills</SelectItem>
+                  <SelectItem value="all">All Skills</SelectItem>
                   <SelectItem value="react">React</SelectItem>
                   <SelectItem value="python">Python</SelectItem>
                   <SelectItem value="machine learning">Machine Learning</SelectItem>
@@ -195,7 +195,7 @@ const Registered = () => {
                   <SelectValue placeholder="Filter by branch" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Branches</SelectItem>
+                  <SelectItem value="all">All Branches</SelectItem>
                   <SelectItem value="Computer Science & Engineering">CSE</SelectItem>
                   <SelectItem value="Information Technology">IT</SelectItem>
                   <SelectItem value="MCA">MCA</SelectItem>
