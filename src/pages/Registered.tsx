@@ -8,7 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { getSkillColor } from '@/utils/skills';
-const anime = require('animejs');
 
 // Mock data - in real app this would come from your backend
 const mockTeams = [
@@ -88,14 +87,13 @@ const Registered = () => {
   const [individuals, setIndividuals] = useState(mockIndividuals);
 
   useEffect(() => {
-    // Page load animation
-    anime({
-      targets: '.registered-item',
-      opacity: [0, 1],
-      translateY: [30, 0],
-      duration: 600,
-      easing: 'easeOutExpo',
-      delay: anime.stagger(150)
+    // CSS Animation stagger effect
+    const elements = document.querySelectorAll('.registered-item');
+    elements.forEach((el, index) => {
+      setTimeout(() => {
+        el.classList.remove('opacity-0');
+        el.classList.add('animate-fade-in');
+      }, index * 150);
     });
   }, []);
 

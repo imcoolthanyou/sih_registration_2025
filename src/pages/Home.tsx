@@ -4,7 +4,6 @@ import { ArrowRight, Users, User, Eye, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-const anime = require('animejs');
 
 const Home = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -12,82 +11,14 @@ const Home = () => {
   const aboutRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Hero animation
-    anime({
-      targets: '.hero-title',
-      opacity: [0, 1],
-      translateY: [50, 0],
-      duration: 1000,
-      easing: 'easeOutExpo',
-      delay: 200,
+    // CSS Animation classes are applied via Tailwind
+    const elements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-description, .register-card, .about-item');
+    elements.forEach((el, index) => {
+      setTimeout(() => {
+        el.classList.remove('opacity-0');
+        el.classList.add('animate-fade-in');
+      }, index * 200);
     });
-
-    anime({
-      targets: '.hero-subtitle',
-      opacity: [0, 1],
-      translateY: [30, 0],
-      duration: 800,
-      easing: 'easeOutExpo',
-      delay: 500,
-    });
-
-    anime({
-      targets: '.hero-description',
-      opacity: [0, 1],
-      translateY: [20, 0],
-      duration: 600,
-      easing: 'easeOutExpo',
-      delay: 800,
-    });
-
-    // Cards stagger animation
-    anime({
-      targets: '.register-card',
-      opacity: [0, 1],
-      translateY: [40, 0],
-      scale: [0.9, 1],
-      duration: 600,
-      easing: 'easeOutExpo',
-      delay: anime.stagger(200, { start: 1200 }),
-    });
-
-    // Floating animation for cards
-    anime({
-      targets: '.register-card',
-      translateY: [-5, 5],
-      duration: 2000,
-      easing: 'easeInOutSine',
-      direction: 'alternate',
-      loop: true,
-      delay: anime.stagger(300),
-    });
-
-    // About section animation
-    const aboutObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            anime({
-              targets: '.about-item',
-              opacity: [0, 1],
-              translateX: [-30, 0],
-              duration: 800,
-              easing: 'easeOutExpo',
-              delay: anime.stagger(150),
-            });
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-
-    if (aboutRef.current) {
-      aboutObserver.observe(aboutRef.current);
-    }
-
-    return () => {
-      aboutObserver.disconnect();
-    };
   }, []);
 
   const scrollToSection = (sectionId: string) => {

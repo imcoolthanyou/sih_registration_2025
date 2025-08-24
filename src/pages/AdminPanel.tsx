@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getSkillColor } from '@/utils/skills';
-const anime = require('animejs');
 
 // Mock data - same as Registered page but with admin actions
 const mockTeams = [
@@ -54,14 +53,13 @@ const AdminPanel = () => {
   });
 
   useEffect(() => {
-    // Page load animation
-    anime({
-      targets: '.admin-item',
-      opacity: [0, 1],
-      translateY: [30, 0],
-      duration: 600,
-      easing: 'easeOutExpo',
-      delay: anime.stagger(150)
+    // CSS Animation stagger effect
+    const elements = document.querySelectorAll('.admin-item');
+    elements.forEach((el, index) => {
+      setTimeout(() => {
+        el.classList.remove('opacity-0');
+        el.classList.add('animate-fade-in');
+      }, index * 150);
     });
   }, []);
 

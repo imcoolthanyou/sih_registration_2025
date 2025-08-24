@@ -10,7 +10,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import SkillSelector from '@/components/SkillSelector';
 import { branchOptions, yearOptions } from '@/utils/skills';
-const anime = require('animejs');
 
 interface IndividualFormData {
   name: string;
@@ -66,14 +65,13 @@ const IndividualRegistration = () => {
   );
 
   useEffect(() => {
-    // Page load animation
-    anime({
-      targets: '.form-section',
-      opacity: [0, 1],
-      translateY: [30, 0],
-      duration: 600,
-      easing: 'easeOutExpo',
-      delay: anime.stagger(200)
+    // CSS Animation stagger effect
+    const elements = document.querySelectorAll('.form-section');
+    elements.forEach((el, index) => {
+      setTimeout(() => {
+        el.classList.remove('opacity-0');
+        el.classList.add('animate-fade-in');
+      }, index * 200);
     });
   }, []);
 
