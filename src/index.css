@@ -2,41 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* SIH Registration Portal Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Theme Colors */
+    --background: 220 26% 14%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 220 20% 18%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 220 20% 18%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 252 100% 67%;
+    --primary-foreground: 220 26% 14%;
+    --primary-glow: 270 100% 75%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 15% 25%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 15% 25%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 270 100% 75%;
+    --accent-foreground: 220 26% 14%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
+    --ring: 252 100% 67%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* SIH Specific Colors */
+    --hero-gradient-start: 252 100% 67%;
+    --hero-gradient-end: 270 100% 75%;
+    --skill-frontend: 120 100% 50%;
+    --skill-backend: 240 100% 60%;
+    --skill-mobile: 300 100% 65%;
+    --skill-ai: 60 100% 50%;
+    --skill-design: 330 100% 65%;
+    --skill-other: 200 100% 60%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--hero-gradient-start)), hsl(var(--hero-gradient-end)));
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(220 15% 22%) 100%);
+    --gradient-button: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+
+    /* Shadows */
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
+    --shadow-card: 0 8px 32px hsl(220 26% 14% / 0.3);
+    --shadow-elevated: 0 20px 40px hsl(220 26% 14% / 0.4);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -83,14 +107,10 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Keep light theme as default for SIH Portal */
   }
 }
 
@@ -100,6 +120,63 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+
+  .card-gradient {
+    background: var(--gradient-card);
+  }
+
+  .button-gradient {
+    background: var(--gradient-button);
+  }
+
+  .anime-stagger {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .skill-tag {
+    @apply px-3 py-1 rounded-full text-sm font-medium transition-all duration-300;
+  }
+
+  .skill-frontend { @apply bg-skill-frontend/20 text-skill-frontend border border-skill-frontend/30; }
+  .skill-backend { @apply bg-skill-backend/20 text-skill-backend border border-skill-backend/30; }
+  .skill-mobile { @apply bg-skill-mobile/20 text-skill-mobile border border-skill-mobile/30; }
+  .skill-ai { @apply bg-skill-ai/20 text-skill-ai border border-skill-ai/30; }
+  .skill-design { @apply bg-skill-design/20 text-skill-design border border-skill-design/30; }
+  .skill-other { @apply bg-skill-other/20 text-skill-other border border-skill-other/30; }
+}
+
+@layer components {
+  .nav-link {
+    @apply relative py-2 px-4 text-foreground/80 hover:text-foreground transition-all duration-300;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .form-floating {
+    @apply relative;
+  }
+
+  .form-floating input:focus + label,
+  .form-floating input:not(:placeholder-shown) + label {
+    @apply text-xs -translate-y-6 text-primary;
+  }
+
+  .form-floating label {
+    @apply absolute left-3 top-3 text-muted-foreground transition-all duration-200 pointer-events-none;
   }
 }
