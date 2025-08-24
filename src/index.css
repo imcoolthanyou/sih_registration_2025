@@ -6,57 +6,57 @@
 
 @layer base {
   :root {
-    /* Light theme with better visibility */
-    --background: 210 40% 98%;
-    --foreground: 222 84% 4.9%;
+    /* Beautiful Dark Theme */
+    --background: 220 26% 14%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 84% 4.9%;
+    --card: 220 20% 18%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 4.9%;
+    --popover: 220 20% 18%;
+    --popover-foreground: 210 40% 98%;
 
     --primary: 252 100% 67%;
-    --primary-foreground: 210 40% 98%;
+    --primary-foreground: 220 26% 14%;
     --primary-glow: 270 100% 75%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 220 15% 25%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 220 15% 25%;
+    --muted-foreground: 215 20% 65%;
 
     --accent: 270 100% 75%;
-    --accent-foreground: 210 40% 98%;
+    --accent-foreground: 220 26% 14%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
     --ring: 252 100% 67%;
 
     --radius: 0.75rem;
 
-    /* SIH Specific Colors with better contrast */
+    /* SIH Specific Colors with good contrast on dark */
     --hero-gradient-start: 252 100% 67%;
     --hero-gradient-end: 270 100% 75%;
-    --skill-frontend: 120 60% 45%;
-    --skill-backend: 240 60% 55%;
-    --skill-mobile: 300 60% 55%;
-    --skill-ai: 60 60% 45%;
-    --skill-design: 330 60% 55%;
-    --skill-other: 200 60% 55%;
+    --skill-frontend: 120 100% 70%;
+    --skill-backend: 240 100% 75%;
+    --skill-mobile: 300 100% 75%;
+    --skill-ai: 60 100% 70%;
+    --skill-design: 330 100% 75%;
+    --skill-other: 200 100% 70%;
 
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(var(--hero-gradient-start)), hsl(var(--hero-gradient-end)));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(210 40% 95%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(220 15% 22%) 100%);
     --gradient-button: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
 
     /* Shadows */
-    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.2);
-    --shadow-card: 0 8px 32px hsl(215 25% 27% / 0.1);
-    --shadow-elevated: 0 20px 40px hsl(215 25% 27% / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
+    --shadow-card: 0 8px 32px hsl(220 26% 14% / 0.3);
+    --shadow-elevated: 0 20px 40px hsl(220 26% 14% / 0.4);
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -134,12 +134,12 @@
     @apply px-3 py-1 rounded-full text-sm font-medium transition-all duration-300;
   }
 
-  .skill-frontend { @apply bg-skill-frontend/15 text-skill-frontend border border-skill-frontend/25; }
-  .skill-backend { @apply bg-skill-backend/15 text-skill-backend border border-skill-backend/25; }
-  .skill-mobile { @apply bg-skill-mobile/15 text-skill-mobile border border-skill-mobile/25; }
-  .skill-ai { @apply bg-skill-ai/15 text-skill-ai border border-skill-ai/25; }
-  .skill-design { @apply bg-skill-design/15 text-skill-design border border-skill-design/25; }
-  .skill-other { @apply bg-skill-other/15 text-skill-other border border-skill-other/25; }
+  .skill-frontend { @apply bg-skill-frontend/20 text-skill-frontend border border-skill-frontend/30; }
+  .skill-backend { @apply bg-skill-backend/20 text-skill-backend border border-skill-backend/30; }
+  .skill-mobile { @apply bg-skill-mobile/20 text-skill-mobile border border-skill-mobile/30; }
+  .skill-ai { @apply bg-skill-ai/20 text-skill-ai border border-skill-ai/30; }
+  .skill-design { @apply bg-skill-design/20 text-skill-design border border-skill-design/30; }
+  .skill-other { @apply bg-skill-other/20 text-skill-other border border-skill-other/30; }
 }
 
 @layer components {

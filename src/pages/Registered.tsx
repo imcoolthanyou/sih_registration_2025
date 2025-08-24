@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { getSkillColor } from '@/utils/skills';
 
-// Mock data - in real app this would come from your backend
+// Mock data - Complete and visible data for testing
 const mockTeams = [
   {
     id: 1,
@@ -21,7 +21,9 @@ const mockTeams = [
     members: [
       { name: "Priya Singh", year: "3rd Year", branch: "CSE", skills: ["React", "UI/UX Design"] },
       { name: "Amit Kumar", year: "2nd Year", branch: "IT", skills: ["Python", "Data Science"] },
-      // ... more members
+      { name: "Neha Gupta", year: "3rd Year", branch: "CSE", skills: ["JavaScript", "Frontend"] },
+      { name: "Karan Joshi", year: "2nd Year", branch: "IT", skills: ["Java", "Backend"] },
+      { name: "Aisha Khan", year: "Final Year", branch: "CSE", skills: ["DevOps", "Cloud"] }
     ]
   },
   {
@@ -34,7 +36,24 @@ const mockTeams = [
     members: [
       { name: "Vikash Roy", year: "3rd Year", branch: "CSE", skills: ["Android", "Kotlin"] },
       { name: "Anjali Gupta", year: "2nd Year", branch: "IT", skills: ["Backend Development", "Java"] },
-      // ... more members
+      { name: "Rohit Sharma", year: "3rd Year", branch: "IT", skills: ["React Native", "Mobile"] },
+      { name: "Pooja Verma", year: "Final Year", branch: "CSE", skills: ["AI/ML", "Python"] },
+      { name: "Arjun Yadav", year: "2nd Year", branch: "IT", skills: ["Database", "SQL"] }
+    ]
+  },
+  {
+    id: 3,
+    teamName: "Tech Titans",
+    leaderName: "Aditya Singh",
+    leaderYear: "Final Year",
+    leaderBranch: "MCA",
+    leaderSkills: ["Full Stack", "MERN", "DevOps", "AWS"],
+    members: [
+      { name: "Ravi Kumar", year: "3rd Year", branch: "MCA", skills: ["React", "Express"] },
+      { name: "Sonia Agarwal", year: "2nd Year", branch: "BCA", skills: ["UI/UX", "Figma"] },
+      { name: "Deepak Tiwari", year: "Final Year", branch: "MCA", skills: ["MongoDB", "Node.js"] },
+      { name: "Kritika Jain", year: "3rd Year", branch: "IT", skills: ["Testing", "QA"] },
+      { name: "Mohit Gupta", year: "2nd Year", branch: "CSE", skills: ["Docker", "Kubernetes"] }
     ]
   }
 ];
@@ -60,7 +79,7 @@ const mockIndividuals = [
     skills: ["Flutter", "Dart", "Firebase", "UI/UX Design"],
     contactNumber: "8765432109",
     github: "https://github.com/kavyasharma",
-    discord: null,
+    discord: "kavya_dev#4567",
     hasDeployedSoftware: true,
     deploymentLink: "https://play.google.com/store/apps/details?id=com.kavya.app"
   },
@@ -73,6 +92,42 @@ const mockIndividuals = [
     contactNumber: "7654321098",
     github: "https://github.com/arjunsingh",
     discord: "arjun_ml#5678",
+    hasDeployedSoftware: false,
+    deploymentLink: null
+  },
+  {
+    id: 4,
+    name: "Priyanka Joshi",
+    year: "2nd Year",
+    branch: "BCA",
+    skills: ["Java", "Spring Boot", "MySQL", "API Development"],
+    contactNumber: "9123456780",
+    github: "https://github.com/priyankajoshi",
+    discord: "priya_codes#9876",
+    hasDeployedSoftware: true,
+    deploymentLink: "https://priyanka-api.herokuapp.com"
+  },
+  {
+    id: 5,
+    name: "Sahil Agarwal",
+    year: "3rd Year",
+    branch: "Computer Science & Engineering",
+    skills: ["Android", "Kotlin", "Firebase", "Material Design"],
+    contactNumber: "8567432190",
+    github: "https://github.com/sahilagarwal",
+    discord: null,
+    hasDeployedSoftware: true,
+    deploymentLink: "https://play.google.com/store/apps/details?id=com.sahil.notes"
+  },
+  {
+    id: 6,
+    name: "Nikita Verma",
+    year: "Final Year",
+    branch: "Information Technology",
+    skills: ["Cybersecurity", "Ethical Hacking", "Network Security", "Python"],
+    contactNumber: "7890123456",
+    github: "https://github.com/nikitaverma",
+    discord: "nikita_security#2468",
     hasDeployedSoftware: false,
     deploymentLink: null
   }
