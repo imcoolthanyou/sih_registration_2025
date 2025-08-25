@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Search, Users, User, Copy, MessageSquare, Github, Filter, Download } from 'lucide-react';
+import { Search, Users, User, Copy, MessageSquare, Github, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,149 +8,57 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { getSkillColor } from '@/utils/skills';
+import { useApi } from '@/lib/api';
+import { useQuery } from '@tanstack/react-query';
 
-// Mock data - Complete and visible data for testing
-const mockTeams = [
-  {
-    id: 1,
-    teamName: "Code Warriors",
-    leaderName: "Rahul Sharma",
-    leaderYear: "3rd Year",
-    leaderBranch: "Computer Science & Engineering",
-    leaderSkills: ["React", "Node.js", "Python", "Machine Learning"],
-    members: [
-      { name: "Priya Singh", year: "3rd Year", branch: "CSE", skills: ["React", "UI/UX Design"] },
-      { name: "Amit Kumar", year: "2nd Year", branch: "IT", skills: ["Python", "Data Science"] },
-      { name: "Neha Gupta", year: "3rd Year", branch: "CSE", skills: ["JavaScript", "Frontend"] },
-      { name: "Karan Joshi", year: "2nd Year", branch: "IT", skills: ["Java", "Backend"] },
-      { name: "Aisha Khan", year: "Final Year", branch: "CSE", skills: ["DevOps", "Cloud"] }
-    ]
-  },
-  {
-    id: 2,
-    teamName: "Innovation Hub",
-    leaderName: "Sneha Patel",
-    leaderYear: "Final Year",
-    leaderBranch: "Information Technology",
-    leaderSkills: ["Flutter", "Firebase", "AI/ML", "Cloud Computing"],
-    members: [
-      { name: "Vikash Roy", year: "3rd Year", branch: "CSE", skills: ["Android", "Kotlin"] },
-      { name: "Anjali Gupta", year: "2nd Year", branch: "IT", skills: ["Backend Development", "Java"] },
-      { name: "Rohit Sharma", year: "3rd Year", branch: "IT", skills: ["React Native", "Mobile"] },
-      { name: "Pooja Verma", year: "Final Year", branch: "CSE", skills: ["AI/ML", "Python"] },
-      { name: "Arjun Yadav", year: "2nd Year", branch: "IT", skills: ["Database", "SQL"] }
-    ]
-  },
-  {
-    id: 3,
-    teamName: "Tech Titans",
-    leaderName: "Aditya Singh",
-    leaderYear: "Final Year",
-    leaderBranch: "MCA",
-    leaderSkills: ["Full Stack", "MERN", "DevOps", "AWS"],
-    members: [
-      { name: "Ravi Kumar", year: "3rd Year", branch: "MCA", skills: ["React", "Express"] },
-      { name: "Sonia Agarwal", year: "2nd Year", branch: "BCA", skills: ["UI/UX", "Figma"] },
-      { name: "Deepak Tiwari", year: "Final Year", branch: "MCA", skills: ["MongoDB", "Node.js"] },
-      { name: "Kritika Jain", year: "3rd Year", branch: "IT", skills: ["Testing", "QA"] },
-      { name: "Mohit Gupta", year: "2nd Year", branch: "CSE", skills: ["Docker", "Kubernetes"] }
-    ]
-  }
-];
-
-const mockIndividuals = [
-  {
-    id: 1,
-    name: "Rohan Mehta",
-    year: "2nd Year",
-    branch: "Computer Science & Engineering",
-    skills: ["React", "JavaScript", "Node.js", "MongoDB"],
-    contactNumber: "9876543210",
-    github: "https://github.com/rohanmehta",
-    discord: "rohan#1234",
-    hasDeployedSoftware: true,
-    deploymentLink: "https://my-portfolio.com"
-  },
-  {
-    id: 2,
-    name: "Kavya Sharma",
-    year: "3rd Year",
-    branch: "Information Technology",
-    skills: ["Flutter", "Dart", "Firebase", "UI/UX Design"],
-    contactNumber: "8765432109",
-    github: "https://github.com/kavyasharma",
-    discord: "kavya_dev#4567",
-    hasDeployedSoftware: true,
-    deploymentLink: "https://play.google.com/store/apps/details?id=com.kavya.app"
-  },
-  {
-    id: 3,
-    name: "Arjun Singh",
-    year: "Final Year",
-    branch: "MCA",
-    skills: ["Python", "Machine Learning", "Data Science", "TensorFlow"],
-    contactNumber: "7654321098",
-    github: "https://github.com/arjunsingh",
-    discord: "arjun_ml#5678",
-    hasDeployedSoftware: false,
-    deploymentLink: null
-  },
-  {
-    id: 4,
-    name: "Priyanka Joshi",
-    year: "2nd Year",
-    branch: "BCA",
-    skills: ["Java", "Spring Boot", "MySQL", "API Development"],
-    contactNumber: "9123456780",
-    github: "https://github.com/priyankajoshi",
-    discord: "priya_codes#9876",
-    hasDeployedSoftware: true,
-    deploymentLink: "https://priyanka-api.herokuapp.com"
-  },
-  {
-    id: 5,
-    name: "Sahil Agarwal",
-    year: "3rd Year",
-    branch: "Computer Science & Engineering",
-    skills: ["Android", "Kotlin", "Firebase", "Material Design"],
-    contactNumber: "8567432190",
-    github: "https://github.com/sahilagarwal",
-    discord: null,
-    hasDeployedSoftware: true,
-    deploymentLink: "https://play.google.com/store/apps/details?id=com.sahil.notes"
-  },
-  {
-    id: 6,
-    name: "Nikita Verma",
-    year: "Final Year",
-    branch: "Information Technology",
-    skills: ["Cybersecurity", "Ethical Hacking", "Network Security", "Python"],
-    contactNumber: "7890123456",
-    github: "https://github.com/nikitaverma",
-    discord: "nikita_security#2468",
-    hasDeployedSoftware: false,
-    deploymentLink: null
-  }
-];
+// No mock data or localStorage loading. Real data should be provided externally (API or manual import).
 
 const Registered = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [skillFilter, setSkillFilter] = useState('all');
   const [branchFilter, setBranchFilter] = useState('all');
-  const [teams, setTeams] = useState(mockTeams);
-  const [individuals, setIndividuals] = useState(mockIndividuals);
 
+  const api = useApi();
+
+  // Fetch teams data
+  const { data: teams = [], isLoading: isLoadingTeams, error: teamsError } = useQuery({
+    queryKey: ['teams'],
+    queryFn: () => api.getTeams(),
+  });
+
+  // Fetch and filter individuals data
+  const { data: individuals = [], isLoading: isLoadingIndividuals, error: individualsError } = useQuery({
+    queryKey: ['individuals', searchTerm, skillFilter, branchFilter],
+    queryFn: () => api.searchParticipants(searchTerm, skillFilter, branchFilter)
+  });
+
+  // Log status
   useEffect(() => {
-    // CSS Animation stagger effect
-    const elements = document.querySelectorAll('.registered-item');
-    elements.forEach((el, index) => {
-      setTimeout(() => {
-        el.classList.remove('opacity-0');
-        el.classList.add('animate-fade-in');
-      }, index * 150);
+    console.log('Query Status:', {
+      teams: { loading: isLoadingTeams, error: teamsError, count: teams.length },
+      individuals: { loading: isLoadingIndividuals, error: individualsError, count: individuals.length }
     });
-  }, []);
+  }, [teams, individuals, isLoadingTeams, isLoadingIndividuals, teamsError, individualsError]);
+
+  // Loading state UI helper
+  const isLoading = isLoadingTeams || isLoadingIndividuals;
+
+  // Fade in effect for registered items
+  useEffect(() => {
+    // Update count in document title
+    if (typeof document !== 'undefined') {
+      document.title = `Registered (${individuals.length} individuals)`;
+      
+      // Add loaded class to trigger animations with a stagger
+      const items = document.querySelectorAll('.registered-item');
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add('loaded');
+        }, index * 100); // Stagger each item by 100ms
+      });
+    }
+  }, [individuals, teams]);
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -192,16 +100,17 @@ const Registered = () => {
 
   // Filter functions
   const filteredTeams = teams.filter(team =>
-    team.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    team.leaderName.toLowerCase().includes(searchTerm.toLowerCase())
+    (team.teamName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (team.leaderName || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Less restrictive filtering for individuals
   const filteredIndividuals = individuals.filter(individual =>
-    individual.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (skillFilter === 'all' || individual.skills.some(skill => 
-      skill.toLowerCase().includes(skillFilter.toLowerCase())
-    )) &&
-    (branchFilter === 'all' || individual.branch === branchFilter)
+    (individual.name || '').toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (skillFilter === 'all' || (Array.isArray(individual.skills) && individual.skills.some((skill: string) => 
+      (skill || '').toLowerCase().includes(skillFilter.toLowerCase())
+    ))) &&
+    (branchFilter === 'all' || (individual.branch || '').toLowerCase() === branchFilter.toLowerCase())
   );
 
   return (
@@ -209,7 +118,7 @@ const Registered = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12 registered-item opacity-0">
+          <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-skill-frontend/10 rounded-full mb-6">
               <Users className="h-8 w-8 text-skill-frontend" />
             </div>
@@ -220,7 +129,7 @@ const Registered = () => {
           </div>
 
           {/* Search and Filters */}
-          <div className="mb-8 registered-item opacity-0">
+          <div className="mb-8">
             <div className="flex flex-col md:flex-row gap-4 mb-6">
               <div className="flex-1">
                 <div className="relative">
@@ -258,6 +167,8 @@ const Registered = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Content starts directly here */}
           </div>
 
           {/* Tabs */}
@@ -289,11 +200,11 @@ const Registered = () => {
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {filteredTeams.map((team) => (
-                  <Card key={team.id} className="registered-item opacity-0">
+                  <Card key={team.id}>
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
-                        <span>{team.teamName}</span>
-                        <Badge variant="outline">{team.members.length + 1}/6 members</Badge>
+                                <span>{team.teamName}</span>
+                                <Badge variant="outline">{((team.members || []).length) + 1}/6 members</Badge>
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
@@ -306,7 +217,7 @@ const Registered = () => {
                       <div>
                         <h4 className="font-medium text-sm text-muted-foreground mb-2">Leader Skills</h4>
                         <div className="flex flex-wrap gap-1">
-                          {team.leaderSkills.map((skill) => (
+                          {(team.leaderSkills || []).map((skill) => (
                             <span
                               key={skill}
                               className={`skill-tag ${getSkillColor(skill)}`}
@@ -320,15 +231,15 @@ const Registered = () => {
                       <div>
                         <h4 className="font-medium text-sm text-muted-foreground mb-2">Team Members</h4>
                         <div className="space-y-2">
-                          {team.members.slice(0, 2).map((member, index) => (
+                          {(team.members || []).slice(0, 2).map((member, index) => (
                             <div key={index} className="text-sm">
                               <span className="font-medium">{member.name}</span>
                               <span className="text-muted-foreground"> • {member.year} • {member.branch}</span>
                             </div>
                           ))}
-                          {team.members.length > 2 && (
+                          {((team.members || []).length > 2) && (
                             <p className="text-sm text-muted-foreground">
-                              +{team.members.length - 2} more members
+                              +{(team.members || []).length - 2} more members
                             </p>
                           )}
                         </div>
@@ -353,9 +264,20 @@ const Registered = () => {
                 </Button>
               </div>
               
+              {/* Debug info */}
+              {filteredIndividuals.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>No individuals found. Total count: {individuals.length}</p>
+                  <p className="text-sm mt-2">
+                    Filters: {searchTerm ? `Search: "${searchTerm}", ` : ''}
+                    Branch: {branchFilter}, Skills: {skillFilter}
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Individual cards */}
                 {filteredIndividuals.map((individual) => (
-                  <Card key={individual.id} className="registered-item opacity-0 group hover:shadow-card transition-all duration-300">
+                  <Card key={individual.id} className="group hover:shadow-card transition-all duration-300">
                     <CardContent className="p-6">
                       <div className="space-y-4">
                         <div>
@@ -366,7 +288,7 @@ const Registered = () => {
                         <div>
                           <h4 className="font-medium text-sm text-muted-foreground mb-2">Skills</h4>
                           <div className="flex flex-wrap gap-1">
-                            {individual.skills.map((skill) => (
+                            {(individual.skills || []).map((skill) => (
                               <span
                                 key={skill}
                                 className={`skill-tag ${getSkillColor(skill)}`}

@@ -1,0 +1,16 @@
+import { createClient } from '@supabase/supabase-js'
+import { Database } from '@/types/supabase'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+console.log('Supabase Configuration:', {
+  url: supabaseUrl,
+  key: supabaseKey?.slice(0, 10) + '...' // Only log part of the key for security
+});
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Missing Supabase environment variables. Check .env file.');
+}
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseKey)
