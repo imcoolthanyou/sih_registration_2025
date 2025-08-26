@@ -1,73 +1,165 @@
-# Welcome to your Lovable project
+SIH Registration 2025
 
-## Project info
+A web application built with React, TypeScript, Vite, Tailwind CSS, and shadcn-ui—designed to streamline the registration workflow for the Smart India Hackathon (SIH) 2025.
 
-**URL**: https://lovable.dev/projects/e420fee1-e046-449d-804a-01e4da371f9d
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+Table of Contents
 
-**Use Lovable**
+About
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e420fee1-e046-449d-804a-01e4da371f9d) and start prompting.
+Features
 
-Changes made via Lovable will be committed automatically to this repo.
+Tech Stack
 
-**Use your preferred IDE**
+Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Usage
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Deployment
 
-Follow these steps:
+Directory Structure
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Contributing
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+License
 
-# Step 3: Install the necessary dependencies.
-npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+About
 
-**Use GitHub Codespaces**
+This project facilitates registration processes for SIH 2025, including SPOC coordination, team formation, and idea submissions—leveraging modern frontend tooling to deliver a smooth and responsive experience.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+Features
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Responsive, modern UI powered by shadcn-ui and Tailwind CSS
 
-## How can I deploy this project?
+Built with TypeScript for enhanced maintainability and type safety
 
-Simply open [Lovable](https://lovable.dev/projects/e420fee1-e046-449d-804a-01e4da371f9d) and click on Share -> Publish.
+Fast development with Vite
 
-## Can I connect a custom domain to my Lovable project?
+(Optional—but recommended to list actual features like form flows, validation, API integration, etc.)
 
-Yes, you can!
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+---
+
+Tech Stack
+
+Vite – Development tooling and build system
+
+React – Frontend framework
+
+TypeScript – Static typing and improved developer experience
+
+Tailwind CSS – Utility-first styling
+
+shadcn-ui – Modular, accessible UI components
+
+
+
+---
+
+Installation
+
+1. Clone the repository:
+
+git clone https://github.com/imcoolthanyou/sih_registration_2025.git
+cd sih_registration_2025
+
+
+2. Install dependencies:
+
+npm install     # or yarn install
+
+
+
+
+---
+
+Usage
+
+Launch the development server:
+
+npm run dev     # or yarn dev
+
+Open http://localhost:5173 in your browser to explore the app.
+
+
+---
+
+Deployment
+
+Deployment can be done via platforms like Vercel, Netlify, or any static hosting provider:
+
+1. Build the project:
+
+npm run build   # or yarn build
+
+
+2. Deploy the contents of the dist/ directory to your hosting provider.
+
+
+
+
+---
+
+Directory Structure
+
+.
+├── public/                # Static assets
+├── src/                   # Application source
+│   ├── components/        # Reusable UI components
+│   ├── pages/ or views/   # Page-level components or screens
+│   ├── styles/            # Custom CSS or utility files
+│   └── main.tsx           # Entry point
+├── .env.example           # Environment variable template
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
+
+
+
+
+---
+
+Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+
+
+2. Create a feature branch (git checkout -b feature-name)
+
+
+3. Commit your changes and push them (git push origin feature-name)
+
+
+4. Open a pull request detailing your improvements
+
+
+
+
+---
+
+License
+
+---
+
+Contact
+
+If you need assistance or want to collaborate:
+
+Project Owner: imcoolthanyou on GitHub
+
+
+
+
+
