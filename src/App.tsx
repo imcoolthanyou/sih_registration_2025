@@ -16,22 +16,27 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/team-registration" element={<TeamRegistration />} />
-          <Route path="/individual-registration" element={<IndividualRegistration />} />
-          <Route path="/registered" element={<Registered />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <div className="min-h-screen bg-background font-sans antialiased">
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Navigation />
+          <main className="relative">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/team-registration" element={<TeamRegistration />} />
+              <Route path="/individual-registration" element={<IndividualRegistration />} />
+              <Route path="/registered" element={<Registered />} />
+              <Route path="/admin" element={<AdminPanel />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </BrowserRouter>
+      </div>
     </TooltipProvider>
   </QueryClientProvider>
 );
+
 
 export default App;

@@ -11,7 +11,17 @@ import { getSkillColor } from '@/utils/skills';
 import { useApi } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
 
-// No mock data or localStorage loading. Real data should be provided externally (API or manual import).
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Registered = () => {
   const { toast } = useToast();
@@ -20,6 +30,25 @@ const Registered = () => {
   const [branchFilter, setBranchFilter] = useState('all');
 
   const api = useApi();
+
+  // Function to handle clearing all data
+  const handleClearData = async () => {
+    try {
+      await api.clearAllData();
+      toast({
+        title: "Data cleared",
+        description: "All registration data has been cleared successfully.",
+      });
+      // Refetch the data
+      window.location.reload();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to clear data. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   // Fetch teams data
   const { data: teams = [], isLoading: isLoadingTeams, error: teamsError } = useQuery({
@@ -118,13 +147,13 @@ const Registered = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
+          <div className="flex flex-col items-center mb-12">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-skill-frontend/10 rounded-full mb-6">
               <Users className="h-8 w-8 text-skill-frontend" />
             </div>
             <h1 className="text-4xl font-bold mb-4">Registered Participants</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Browse registered teams and individuals looking for teammates
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
+              All registered teams and individuals will appear here.
             </p>
           </div>
 

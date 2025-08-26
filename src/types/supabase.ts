@@ -9,6 +9,27 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      registration_settings: {
+        Row: {
+          id: number
+          registration_deadline: string
+          is_registration_enabled: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          registration_deadline: string
+          is_registration_enabled: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          registration_deadline?: string
+          is_registration_enabled?: boolean
+          updated_at?: string
+        }
+      };
       teams: {
         Row: {
           id: string

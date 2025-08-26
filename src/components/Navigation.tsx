@@ -1,21 +1,48 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import sihLogo from '@/assets/sih-logo.png';
+import { useApi } from '@/lib/api';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
+  const [isRegistrationEnabled, setIsRegistrationEnabled] = useState(true);
+  const [registrationDeadline, setRegistrationDeadline] = useState<Date | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  const api = useApi();
+
+  useEffect(() => {
+    const checkRegistrationStatus = async () => {
+      try {
+        const settings = await api.getRegistrationSettings();
+        const deadline = new Date(settings.registrationDeadline);
+        setRegistrationDeadline(deadline);
+        setIsRegistrationEnabled(settings.isRegistrationEnabled && new Date() < deadline);
+      } catch (error) {
+        console.error('Failed to fetch registration settings:', error);
+      }
+    };
+    checkRegistrationStatus();
+  }, []);
 
   const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/team-registration', label: 'Team Registration' },
-    { path: '/individual-registration', label: 'Individual Registration' },
-    { path: '/registered', label: 'Registered' },
+    { path: '/', label: 'Home', alwaysEnabled: true },
+    { path: '/team-registration', label: 'Team Registration', requiresRegistration: true },
+    { path: '/individual-registration', label: 'Individual Registration', requiresRegistration: true },
+    { path: '/registered', label: 'Registered', alwaysEnabled: true },
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: any) => {
+    if (item.requiresRegistration && !isRegistrationEnabled) {
+      e.preventDefault();
+      const deadlineDate = registrationDeadline ? new Date(registrationDeadline).toLocaleDateString() : 'the deadline';
+      alert(`Registration is currently closed. The deadline was ${deadlineDate}.`);
+    }
+  };
 
   const handleAdminLogin = () => {
     if (adminPassword === 'sih2025admin') {
@@ -52,11 +79,17 @@ const Navigation = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={(e) => handleNavClick(e, item)}
                 className={`nav-link ${
                   location.pathname === item.path ? 'text-primary' : ''
+                } ${
+                  item.requiresRegistration && !isRegistrationEnabled ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
                 {item.label}
+                {item.requiresRegistration && !isRegistrationEnabled && (
+                  <span className="ml-1 text-xs text-destructive">(Closed)</span>
+                )}
               </Link>
             ))}
             <Button
@@ -91,10 +124,18 @@ const Navigation = () => {
                   location.pathname === item.path
                     ? 'bg-primary/10 text-primary'
                     : 'text-foreground/80 hover:bg-muted hover:text-foreground'
+                } ${
+                  item.requiresRegistration && !isRegistrationEnabled ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => {
+                  handleNavClick(e, item);
+                  setIsMenuOpen(false);
+                }}
               >
                 {item.label}
+                {item.requiresRegistration && !isRegistrationEnabled && (
+                  <span className="ml-1 text-xs text-destructive">(Closed)</span>
+                )}
               </Link>
             ))}
             <Button

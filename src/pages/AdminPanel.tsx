@@ -1,58 +1,91 @@
 import { useEffect, useState } from 'react';
-import { Shield, Users, User, Trash2, Edit, Download, Plus } from 'lucide-react';
+import { Shield, Users, User, Trash2, Edit, Download, Plus, Calendar, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { getSkillColor } from '@/utils/skills';
+import { useApi } from '@/lib/api';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Calendar as CalendarPicker } from '@/components/ui/calendar';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-// Mock data - same as Registered page but with admin actions
-const mockTeams = [
-  {
-    id: 1,
-    teamName: "Code Warriors",
-    leaderName: "Rahul Sharma",
-    leaderYear: "3rd Year",
-    leaderBranch: "Computer Science & Engineering",
-    leaderPhone: "9876543210",
-    leaderDiscord: "rahul#1234",
-    leaderSkills: ["React", "Node.js", "Python", "Machine Learning"],
-    members: [
-      { name: "Priya Singh", year: "3rd Year", branch: "CSE", skills: ["React", "UI/UX Design"] },
-      { name: "Amit Kumar", year: "2nd Year", branch: "IT", skills: ["Python", "Data Science"] },
-    ],
-    registeredAt: "2025-01-15T10:30:00Z"
-  }
-];
-
-const mockIndividuals = [
-  {
-    id: 1,
-    name: "Rohan Mehta",
-    year: "2nd Year",
-    branch: "Computer Science & Engineering",
-    skills: ["React", "JavaScript", "Node.js", "MongoDB"],
-    contactNumber: "9876543210",
-    github: "https://github.com/rohanmehta",
-    discord: "rohan#1234",
-    hasDeployedSoftware: true,
-    deploymentLink: "https://my-portfolio.com",
-    registeredAt: "2025-01-14T15:45:00Z"
-  }
-];
+const ADMIN_PASSWORD = "sih2025admin"; // In a real app, this should be in environment variables
 
 const AdminPanel = () => {
   const { toast } = useToast();
-  const [teams, setTeams] = useState(mockTeams);
-  const [individuals, setIndividuals] = useState(mockIndividuals);
+  const api = useApi();
+  const [teams, setTeams] = useState<any[]>([]);
+  const [individuals, setIndividuals] = useState<any[]>([]);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [registrationDeadline, setRegistrationDeadline] = useState<Date | undefined>(new Date());
+  const [isRegistrationEnabled, setIsRegistrationEnabled] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(true);
+  const [password, setPassword] = useState("");
   const [stats, setStats] = useState({
-    totalTeams: mockTeams.length,
-    totalIndividuals: mockIndividuals.length,
-    totalParticipants: mockTeams.reduce((acc, team) => acc + team.members.length + 1, 0) + mockIndividuals.length
+    totalTeams: 0,
+    totalIndividuals: 0,
+    totalParticipants: 0
   });
 
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        // Load teams and individuals
+        const [teamsData, individualsData] = await Promise.all([
+          api.getTeams(),
+          api.getIndividuals()
+        ]);
+        setTeams(teamsData);
+        setIndividuals(individualsData);
+        setStats({
+          totalTeams: teamsData.length,
+          totalIndividuals: individualsData.length,
+          totalParticipants: teamsData.reduce((acc, team) => acc + (team.members?.length || 0) + 1, 0) + individualsData.length
+        });
+      } catch (error) {
+        console.error('Error loading data:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load data. Please try again.",
+          variant: "destructive"
+        });
+      }
+    };
+
+    // Load registration settings
+    const loadSettings = async () => {
+      try {
+        const settings = await api.getRegistrationSettings();
+        setRegistrationDeadline(new Date(settings.registrationDeadline));
+        setIsRegistrationEnabled(settings.isRegistrationEnabled);
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load registration settings.",
+          variant: "destructive"
+        });
+      }
+    };
+
+    loadData();
+    loadSettings();
+
     // CSS Animation stagger effect
     const elements = document.querySelectorAll('.admin-item');
     elements.forEach((el, index) => {
@@ -83,6 +116,85 @@ const AdminPanel = () => {
     }
   };
 
+  // Load registration settings
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const settings = await api.getRegistrationSettings();
+        setRegistrationDeadline(new Date(settings.registrationDeadline));
+        setIsRegistrationEnabled(settings.isRegistrationEnabled);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load registration settings.",
+          variant: "destructive",
+        });
+      }
+    };
+    loadSettings();
+  }, []);
+
+  const handleClearData = async () => {
+    try {
+      await api.clearAllData();
+      toast({
+        title: "Success",
+        description: "All registration data has been cleared.",
+      });
+      // Refetch the data
+      window.location.reload();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to clear data. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const saveRegistrationSettings = async () => {
+    if (!registrationDeadline) {
+      toast({
+        title: "Error",
+        description: "Please select a registration deadline.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Set the time to end of day (23:59:59.999) and convert to UTC
+      const deadline = new Date(registrationDeadline);
+      deadline.setHours(23, 59, 59, 999);
+      
+      console.log('Selected deadline:', deadline);
+      const utcDeadline = new Date(Date.UTC(
+        deadline.getFullYear(),
+        deadline.getMonth(),
+        deadline.getDate(),
+        23, 59, 59, 999
+      ));
+      console.log('UTC deadline:', utcDeadline);
+      
+      await api.updateRegistrationSettings({
+        registrationDeadline: utcDeadline.toISOString(),
+        isRegistrationEnabled,
+      });
+      toast({
+        title: "Success",
+        description: "Registration settings updated successfully.",
+      });
+      setIsSettingsOpen(false);
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update registration settings.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const exportData = (data: any[], filename: string) => {
     const jsonStr = JSON.stringify(data, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(jsonStr);
@@ -94,12 +206,65 @@ const AdminPanel = () => {
     linkElement.click();
   };
 
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      setShowLoginDialog(false);
+      toast({
+        title: "Success",
+        description: "Successfully logged in to admin panel.",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Invalid password. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background pt-20 pb-12">
+        <div className="container mx-auto px-4">
+          <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Admin Authentication Required</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="flex flex-col gap-4">
+                  <Label htmlFor="password">Password</Label>
+                  <input
+                    id="password"
+                    type="password"
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleLogin();
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={handleLogin}>Login</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background pt-20 pb-12">
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-12 admin-item opacity-0">
+          <div className="mb-12">
             <div className="flex items-center gap-4 mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-destructive/10 rounded-full">
                 <Shield className="h-6 w-6 text-destructive" />
@@ -108,6 +273,42 @@ const AdminPanel = () => {
                 <h1 className="text-3xl font-bold">Admin Panel</h1>
                 <p className="text-muted-foreground">Manage SIH 2025 registrations</p>
               </div>
+            </div>
+
+            {/* Stats Cards */}
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-4 mb-8">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" className="flex items-center gap-2">
+                    <Trash2 className="h-4 w-4" />
+                    Clear All Data
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete all registered teams and individuals.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleClearData}>
+                      Yes, delete everything
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <Button
+                variant="outline"
+                onClick={() => setIsSettingsOpen(true)}
+                className="flex items-center gap-2"
+              >
+                <Calendar className="h-4 w-4" />
+                Registration Settings
+              </Button>
             </div>
 
             {/* Stats Cards */}
@@ -123,6 +324,66 @@ const AdminPanel = () => {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Registration Settings Dialog */}
+              <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Registration Settings</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-6">
+                    <div className="space-y-6">
+                      <div>
+                        <Label className="mb-2 block">Registration Deadline</Label>
+                        <CalendarPicker
+                          mode="single"
+                          selected={registrationDeadline}
+                          onSelect={(date) => {
+                            if (date) {
+                              // Set time to end of the day (23:59:59)
+                              const endOfDay = new Date(date);
+                              endOfDay.setHours(23, 59, 59, 999);
+                              setRegistrationDeadline(endOfDay);
+                            }
+                          }}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                          className="rounded-md border"
+                        />
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="registration-enabled"
+                          checked={isRegistrationEnabled}
+                          onCheckedChange={setIsRegistrationEnabled}
+                        />
+                        <Label htmlFor="registration-enabled">Enable Registration</Label>
+                      </div>
+
+                      {registrationDeadline && (
+                        <p className="text-sm text-muted-foreground">
+                          Registration will {isRegistrationEnabled ? 'be open' : 'remain closed'} until{' '}
+                          {registrationDeadline.toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })} at 11:59 PM
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={saveRegistrationSettings}>
+                      Save Settings
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
 
               <Card>
                 <CardContent className="p-6">

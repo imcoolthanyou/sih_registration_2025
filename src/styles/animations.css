@@ -1,0 +1,16 @@
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #00ff87, #60efff);
+}
+
+.hero-gradient {
+  background: radial-gradient(circle at center, rgba(0,255,135,0.15) 0%, rgba(96,239,255,0.15) 100%);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

@@ -4,6 +4,7 @@ import { SupabaseContext } from '@/lib/supabase-context'
 import { supabase } from '@/lib/supabase'
 import App from './App.tsx'
 import './index.css'
+import './App.css'
 
 const queryClient = new QueryClient({
   defaultOptions: {

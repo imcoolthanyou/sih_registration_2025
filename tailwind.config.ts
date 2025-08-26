@@ -18,6 +18,33 @@ export default {
 			}
 		},
 		extend: {
+			animation: {
+				'float': 'float 6s ease-in-out infinite',
+				'fade-in': 'fadeIn 1s ease-out forwards',
+				'slide-in': 'slideIn 1s ease-out forwards',
+				'rotate': 'rotate 20s linear infinite',
+			},
+			keyframes: {
+				float: {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-20px)' },
+				},
+				fadeIn: {
+					from: { opacity: '0' },
+					to: { opacity: '1' },
+				},
+				slideIn: {
+					from: { transform: 'translateY(50px)', opacity: '0' },
+					to: { transform: 'translateY(0)', opacity: '1' },
+				},
+				rotate: {
+					from: { transform: 'rotate(0deg)' },
+					to: { transform: 'rotate(360deg)' },
+				},
+			},
+			backgroundImage: {
+				'gradient-hero': 'linear-gradient(to right, #00ff87, #60efff)',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
