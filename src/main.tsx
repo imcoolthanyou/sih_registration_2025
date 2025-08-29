@@ -1,7 +1,8 @@
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { SupabaseContext } from '@/lib/supabase-context'
-import { supabase } from '@/lib/supabase'
+// This import is now correct
+import { SupabaseContext } from "./lib/supabase-context.tsx";
+import { supabase } from './lib/supabase';
 import App from './App.tsx'
 import './index.css'
 import './App.css'
@@ -17,6 +18,7 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
+    {/* This usage is now correct */}
     <SupabaseContext.Provider value={supabase}>
       <App />
     </SupabaseContext.Provider>
